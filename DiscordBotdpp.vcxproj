@@ -158,6 +158,7 @@ copy "$(SolutionDir)DiscordToken.txt" /y "$(TargetDir)"</Command>
     <ClInclude Include="YoutubeMusicObject.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ffmpeg.exe" />
     <None Include="yt-dlp.exe">
       <DeploymentContent>true</DeploymentContent>
     </None>

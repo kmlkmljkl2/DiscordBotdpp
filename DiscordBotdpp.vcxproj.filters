@@ -77,5 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="yt-dlp.exe" />
+    <None Include="ffmpeg.exe" />
   </ItemGroup>
 </Project>
