@@ -1,5 +1,5 @@
 /* Exit Games Common - C++ Client Lib
- * Copyright (C) 2004-2022 Exit Games GmbH. All rights reserved.
+ * Copyright (C) 2004-2023 Exit Games GmbH. All rights reserved.
  * http://www.photonengine.com
  * mailto:developer@photonengine.com
  */
@@ -22,7 +22,7 @@
 		wchar_t * EG_wcsrchr (const EG_CHAR * string, EG_CHAR ch);
 #	endif
 
-#	if defined _EG_MARMALADE_PLATFORM && (!defined I3D_ARCH_X86 || !(defined _EG_MS_COMPILER || defined __clang__)) && !defined I3D_ARCH_64_BIT && !defined S3E_IPHONE_STATIC_LINK || defined _EG_ANDROID_PLATFORM || defined _EG_EMSCRIPTEN_PLATFORM
+#	if defined _EG_ANDROID_PLATFORM || defined _EG_EMSCRIPTEN_PLATFORM
 		int EG_vswprintf(EG_CHAR* wcs, size_t maxlen, const EG_CHAR* format, va_list args);
 		int EG_swprintf(EG_CHAR* wcs, size_t maxlen, const EG_CHAR* format, ...);
 #	endif

@@ -1,5 +1,5 @@
 /* Exit Games Common - C++ Client Lib
- * Copyright (C) 2004-2022 Exit Games GmbH. All rights reserved.
+ * Copyright (C) 2004-2023 Exit Games GmbH. All rights reserved.
  * http://www.photonengine.com
  * mailto:developer@photonengine.com
  */
@@ -151,6 +151,7 @@ namespace ExitGames
 #			define REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, ...) REALLOCATE_ARRAY(Ftype, p, count, __VA_ARGS__); return p;
 			/** @endcond */
 
+EG_PRAGMA_VISIBILITY_PUSH_HIDDEN
 			/**
 			   This function allocates a new instance of the type, that has been specified as first template parameter, on dynamic memory
 			   and properly initializes it. For an instance of a class type this includes calling a constructor on the instance.
@@ -446,6 +447,7 @@ namespace ExitGames
 			{
 				DEALLOCATE_ARRAY(Ftype, p);
 			}
+EG_PRAGMA_VISIBILITY_POP
 			/*@}*/
 		}
 	}

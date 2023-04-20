@@ -1,5 +1,5 @@
 /* Exit Games Photon LoadBalancing - C++ Client Lib
- * Copyright (C) 2004-2022 Exit Games GmbH. All rights reserved.
+ * Copyright (C) 2004-2023 Exit Games GmbH. All rights reserved.
  * http://www.photonengine.com
  * mailto:developer@photonengine.com
  */
@@ -27,8 +27,8 @@ namespace ExitGames
 
 			void mergeCustomProperties(const Common::Hashtable& customProperties, const WebFlags& webflags=WebFlags());
 			template<typename ktype, typename vtype> void addCustomProperty(const ktype& key, const vtype& value, const WebFlags& webflags=WebFlags());
-			template<typename ktype, typename vtype> void addCustomProperty(const ktype& key, const vtype pValueArray, typename Common::Helpers::ArrayLengthType<vtype>::type arrSize, const WebFlags& webflags=WebFlags());
-			template<typename ktype, typename vtype> void addCustomProperty(const ktype& key, const vtype pValueArray, const short* pArrSizes, const WebFlags& webflags=WebFlags());
+			template<typename ktype, typename vtype> void addCustomProperty(const ktype& key, const vtype pValueArray, int arrSize, const WebFlags& webflags=WebFlags());
+			template<typename ktype, typename vtype> void addCustomProperty(const ktype& key, const vtype pValueArray, const int* pArrSizes, const WebFlags& webflags=WebFlags());
 			void addCustomProperties(const Common::Hashtable& customProperties, const WebFlags& webflags=WebFlags());
 			template<typename ktype> void removeCustomProperty(const ktype& key, const WebFlags& webflags=WebFlags());
 			template<typename ktype> void removeCustomProperties(const ktype* keys, unsigned int count, const WebFlags& webflags=WebFlags());
@@ -57,7 +57,7 @@ namespace ExitGames
 		}
 
 		template<typename ktype, typename vtype>
-		void MutablePlayer::addCustomProperty(const ktype& key, const vtype pValueArray, typename Common::Helpers::ArrayLengthType<vtype>::type arrSize, const WebFlags& webflags)
+		void MutablePlayer::addCustomProperty(const ktype& key, const vtype pValueArray, int arrSize, const WebFlags& webflags)
 		{
 			Common::Hashtable hash;
 			hash.put(key, pValueArray, arrSize);
@@ -65,7 +65,7 @@ namespace ExitGames
 		}
 
 		template<typename ktype, typename vtype>
-		void MutablePlayer::addCustomProperty(const ktype& key, const vtype pValueArray, const short* pArrSizes, const WebFlags& webflags)
+		void MutablePlayer::addCustomProperty(const ktype& key, const vtype pValueArray, const int* pArrSizes, const WebFlags& webflags)
 		{
 			Common::Hashtable hash;
 			hash.put(key, pValueArray, pArrSizes);

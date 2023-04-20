@@ -1,5 +1,5 @@
 /* Exit Games Common - C++ Client Lib
- * Copyright (C) 2004-2022 Exit Games GmbH. All rights reserved.
+ * Copyright (C) 2004-2023 Exit Games GmbH. All rights reserved.
  * http://www.photonengine.com
  * mailto:developer@photonengine.com
  */
@@ -17,7 +17,7 @@ namespace ExitGames
 		{
 		public:
 			virtual ~LoggingBase(void) = 0;
-			static void setListener(const BaseListener* baseListener);
+			static void setListener(const BaseListener* pBaseListener);
 			static int getDebugOutputLevel(void);
 			static bool setDebugOutputLevel(int debugLevel);
 			static const LogFormatOptions& getLogFormatOptions(void);
@@ -52,9 +52,9 @@ namespace ExitGames
 		   @sa
 		   BaseListener                                                    */
 		template<typename T>
-		void LoggingBase<T>::setListener(const BaseListener* const baseListener)
+		void LoggingBase<T>::setListener(const BaseListener* const pBaseListener)
 		{
-			Accessor::getLogger().setListener(*baseListener);
+			Accessor::getLogger().setListener(*pBaseListener);
 		}
 
 		/**

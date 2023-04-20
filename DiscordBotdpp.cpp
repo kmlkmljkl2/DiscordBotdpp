@@ -203,7 +203,7 @@ int main()
 	//return 0;
 	DiscordBotStuff::Init();
 	InitCommands();
-	//InitSlashcmds
+	
 	//InitTestCommands();
 
 	//Logger::LogDebug("Starting");

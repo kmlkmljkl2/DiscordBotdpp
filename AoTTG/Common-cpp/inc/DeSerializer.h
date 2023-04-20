@@ -1,30 +1,36 @@
 /* Exit Games Common - C++ Client Lib
- * Copyright (C) 2004-2022 Exit Games GmbH. All rights reserved.
+ * Copyright (C) 2004-2023 Exit Games GmbH. All rights reserved.
  * http://www.photonengine.com
  * mailto:developer@photonengine.com
  */
 
 #pragma once
 
-#include "AoTTG/Common-cpp/inc/Helpers/DeSerializerImplementation.h"
+#include "AoTTG/Common-cpp/inc/Enums/SerializationProtocol.h"
+#include "AoTTG/Common-cpp/inc/Object.h"
 
 namespace ExitGames
 {
 	namespace Common
 	{
-		class DeSerializer : public Base
+		namespace Helpers
+		{
+			class DeserializerImplementation;
+		}
+
+		class Deserializer : public Base
 		{
 		public:
 			using ToString::toString;
 
-			DeSerializer(const nByte* data, int size);
+			Deserializer(const nByte* data, unsigned int size, nByte protocol=SerializationProtocol::DEFAULT);
+			virtual ~Deserializer(void);
 
 			bool pop(Object& object);
 
 			virtual JString& toString(JString& retStr, bool withTypes=false) const;
 		private:
-			Helpers::DeSerializerImplementation mImp;
-			int mSize;
+			Helpers::DeserializerImplementation& mImp;
 		};
 	}
 }

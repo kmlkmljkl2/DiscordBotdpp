@@ -1,5 +1,5 @@
 /* Exit Games Photon - C++ Client Lib
- * Copyright (C) 2004-2022 Exit Games GmbH. All rights reserved.
+ * Copyright (C) 2004-2023 Exit Games GmbH. All rights reserved.
  * http://www.photonengine.com
  * mailto:developer@photonengine.com
  */
@@ -8,7 +8,7 @@
 
 #include "AoTTG/Common-cpp/inc/Common.h"
 
-#if defined _EG_MICROSOFT_PLATFORM || defined _EG_APPLE_PLATFORM  || defined _EG_ANDROID_PLATFORM
+#if defined _EG_MICROSOFT_PLATFORM || defined _EG_APPLE_PLATFORM  || defined _EG_ANDROID_PLATFORM || _EG_SWITCH_PLATFORM
 #	define _EG_WEBSOCKET_AVAILABLE
 #endif
 #if defined _EG_ANDROID_PLATFORM //|| defined _EG_WINDOWS_PLATFORM 

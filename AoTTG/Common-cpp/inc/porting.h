@@ -1,5 +1,5 @@
 /* Exit Games Common - C++ Client Lib
- * Copyright (C) 2004-2022 Exit Games GmbH. All rights reserved.
+ * Copyright (C) 2004-2023 Exit Games GmbH. All rights reserved.
  * http://www.photonengine.com
  * mailto:developer@photonengine.com
  */
@@ -21,8 +21,6 @@
 #	include <string.h>
 #elif defined _EG_SWITCH_PLATFORM
 #	include <nn/time.h>
-#elif defined _EG_PSVITA_PLATFORM
-#	include <kernel.h>
 #elif defined _EG_UNIX_PLATFORM
 #	include <pthread.h>
 #endif
@@ -37,13 +35,13 @@
 
 #if defined _EG_MICROSOFT_PLATFORM
 #	define SLEEP(ms) Sleep(ms)
-#elif defined _EG_PSVITA_PLATFORM || defined _EG_SWITCH_PLATFORM
+#elif defined _EG_SWITCH_PLATFORM
 #	if defined __cplusplus
 #		include <chrono>
 #		define SLEEP(ms) std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 #	endif
 #else
-#	if defined _EG_LINUX_PLATFORM || defined _EG_MARMALADE_PLATFORM || defined _EG_ANDROID_PLATFORM || defined _EG_BLACKBERRY_PLATFORM || defined _EG_SONY_PLATFORM
+#	if defined _EG_LINUX_PLATFORM || defined _EG_ANDROID_PLATFORM || defined _EG_SONY_PLATFORM
 #		include "unistd.h"
 #	endif
 #	define SLEEP(ms) usleep(ms*1000)

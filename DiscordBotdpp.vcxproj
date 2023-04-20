@@ -111,7 +111,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)curl_x64-windows\debug\lib;$(SolutionDir)AoTTG\Common-cpp\lib;$(SolutionDir)AoTTG\LoadBalancing-cpp\lib;$(SolutionDir)AoTTG\Photon-cpp\lib;$(SolutionDir)libdpp-10.0.23-win64-debug-vs2022\libdpp-10.0.23-win64\lib\dpp-10.0;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libcurl-d.lib;Common-cpp_vc16_debug_windows_md_x64.lib;LoadBalancing-cpp_debug_windows_md_x64.lib;Photon-cpp_vc16_debug_windows_md_x64.lib;dpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcurl-d.lib;Common-cpp_vc17_debug_windows_md_x64.lib;LoadBalancing-cpp_vc17_debug_windows_md_x64.lib;Photon-cpp_vc17_debug_windows_md_x64.lib;dpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)curl_x64-windows\debug\bin\*dll" /y "$(TargetDir)"
@@ -127,13 +127,22 @@ copy "$(SolutionDir)DiscordToken.txt" /y "$(TargetDir)"</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)curl_x64-windows\include;$(SolutionDir)libdpp-10.0.23-win64-release-vs2022\libdpp-10.0.23-win64\include\dpp-10.0;$(SolutionDir)AoTTG\Common-cpp\inc;$(SolutionDir)AoTTG\LoadBalancing-cpp\inc;$(SolutionDir)AoTTG\Photon-cpp\inc;$(SoltuinDir)Package\single_include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)curl_x64-windows\lib;$(SolutionDir)libdpp-10.0.23-win64-release-vs2022\libdpp-10.0.23-win64\lib\dpp-10.0;$(SolutionDir)AoTTG\Common-cpp\lib;$(SolutionDir)AoTTG\LoadBalancing-cpp\lib;$(SolutionDir)AoTTG\Photon-cpp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcurl.lib;dpp.lib;Common-cpp_vc17_release_windows_md_x64.lib;LoadBalancing-cpp_vc17_release_windows_md_x64.lib;Photon-cpp_vc17_release_windows_md_x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(SolutionDir)curl_x64-windows\bin\*dll" /y "$(TargetDir)"
+copy "$(SolutionDir)libdpp-10.0.23-win64-release-vs2022\libdpp-10.0.23-win64\bin\*dll" /y "$(TargetDir)"
+copy "$(SolutionDir)DiscordToken.txt" /y "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Command.cpp" />

@@ -1,5 +1,5 @@
 /* Exit Games Common - C++ Client Lib
- * Copyright (C) 2004-2022 Exit Games GmbH. All rights reserved.
+ * Copyright (C) 2004-2023 Exit Games GmbH. All rights reserved.
  * http://www.photonengine.com
  * mailto:developer@photonengine.com
  */
@@ -58,8 +58,8 @@ namespace ExitGames
 			virtual void put(const DictionaryBase& src);
 			void put(const EKeyType& key, const EValueType& val);
 			void put(const EKeyType& key);
-			void put(const EKeyType& key, const EValueType pVal, typename Common::Helpers::ArrayLengthType<EValueType>::type size);
-			void put(const EKeyType& key, const EValueType pVal, const short* sizes);
+			void put(const EKeyType& key, const EValueType pVal, int size);
+			void put(const EKeyType& key, const EValueType pVal, const int* sizes);
 			void remove(const EKeyType& key);
 			bool contains(const EKeyType& key) const;
 
@@ -76,7 +76,7 @@ namespace ExitGames
 			typedef DictionaryBase super;
 
 			virtual bool compare(const DictionaryBase& toCompare) const;
-			virtual DictionaryBase* copy(short amount) const;
+			virtual DictionaryBase* copy(int amount) const;
 
 			EG_ATTRIBUTE_VISIBILITY_HIDDEN static bool mStaticMembersHaveBeenInitialized;
 
@@ -206,16 +206,16 @@ namespace ExitGames
 			mHashtable.put(key);
 		}
 
-		/** @copydoc AssociativeContainerBase::put(const FKeyType&,FValueType,typename Common::Helpers::ArrayLengthType<FValueType>::type) */
+		/** @copydoc AssociativeContainerBase::put(const FKeyType&,FValueType,int) */
 		template<typename EKeyType, typename EValueType>
-		void Dictionary<EKeyType, EValueType>::put(const EKeyType& key, const EValueType pVal, typename Common::Helpers::ArrayLengthType<EValueType>::type size)
+		void Dictionary<EKeyType, EValueType>::put(const EKeyType& key, const EValueType pVal, int size)
 		{
 			super::put(key, pVal, size);
 		}
 
 		/** @copydoc AssociativeContainerBase::put(const FKeyType&,FValueType,const short*) */
 		template<typename EKeyType, typename EValueType>
-		void Dictionary<EKeyType, EValueType>::put(const EKeyType& key, const EValueType pVal, const short* const sizes)
+		void Dictionary<EKeyType, EValueType>::put(const EKeyType& key, const EValueType pVal, const int* const sizes)
 		{
 			super::put(key, pVal, sizes);
 		}
@@ -308,7 +308,7 @@ namespace ExitGames
 		}
 
 		template<typename EKeyType, typename EValueType>
-		DictionaryBase* Dictionary<EKeyType, EValueType>::copy(short amount) const
+		DictionaryBase* Dictionary<EKeyType, EValueType>::copy(int amount) const
 		{
 			DictionaryBase* pRetVal = MemoryManagement::allocateArray<Dictionary<EKeyType, EValueType> >(amount);
 			for(short i=0; i<amount; i++)

@@ -1,12 +1,12 @@
 /* Exit Games Common - C++ Client Lib
- * Copyright (C) 2004-2022 Exit Games GmbH. All rights reserved.
+ * Copyright (C) 2004-2023 Exit Games GmbH. All rights reserved.
  * http://www.photonengine.com
  * mailto:developer@photonengine.com
  */
 
 #pragma once
 
-#if !defined _EG_LINUX_PLATFORM && !defined _EG_MARMALADE_PLATFORM && !defined _EG_IPHONE_PLATFORM && !defined _EG_IMAC_PLATFORM && !defined _EG_WINDOWS_PLATFORM && !defined _EG_ANDROID_PLATFORM && !defined _EG_BLACKBERRY_PLATFORM && !defined _EG_PS3_PLATFORM && !defined _EG_PS4_PLATFORM && !defined _EG_TVOS_PLATFORM && !defined _EG_WINDOWSSTORE_PLATFORM && !defined _EG_EMSCRIPTEN_PLATFORM && !defined _EG_XB1_PLATFORM && !defined _EG_PSVITA_PLATFORM && !defined _EG_SWITCH_PLATFORM && !defined _EG_GAMECORE_PLATFORM && !defined _EG_PS5_PLATFORM
+#if !defined _EG_LINUX_PLATFORM && !defined _EG_IPHONE_PLATFORM && !defined _EG_IMAC_PLATFORM && !defined _EG_WINDOWS_PLATFORM && !defined _EG_ANDROID_PLATFORM && !defined _EG_PS4_PLATFORM && !defined _EG_TVOS_PLATFORM && !defined _EG_WINDOWSSTORE_PLATFORM && !defined _EG_EMSCRIPTEN_PLATFORM && !defined _EG_XB1_PLATFORM && !defined _EG_SWITCH_PLATFORM && !defined _EG_GAMECORE_PLATFORM && !defined _EG_PS5_PLATFORM
 #	include "AoTTG/Common-cpp/inc/platform_definition.h"
 #endif
 
@@ -31,20 +31,14 @@
 #	endif
 #endif
 
-#if defined _EG_PS3_PLATFORM || defined _EG_PSVITA_PLATFORM || defined _EG_PS4_PLATFORM || defined _EG_PS5_PLATFORM
+#if defined _EG_PS4_PLATFORM || defined _EG_PS5_PLATFORM
 #	define _EG_SONY_PLATFORM true
-#	if !defined _EG_PS3_PLATFORM
-#		define _EG_PSVITA_OR_NEWER_PLATFORM true
-#		if !defined _EG_PSVITA_PLATFORM
-#			define _EG_PS4_OR_NEWER_PLATFORM true
-#			if !defined _EG_PS4_PLATFORM
-#				define _EG_PS5_OR_NEWER_PLATFORM true
-#			endif
-#		endif
+#	if !defined _EG_PS4_PLATFORM
+#		define _EG_PS5_OR_NEWER_PLATFORM true
 #	endif
 #endif
 
-#if defined _EG_LINUX_PLATFORM || defined _EG_MARMALADE_PLATFORM || defined _EG_APPLE_PLATFORM || defined _EG_ANDROID_PLATFORM || defined _EG_BLACKBERRY_PLATFORM || defined _EG_SONY_PLATFORM || defined _EG_EMSCRIPTEN_PLATFORM || defined _EG_SWITCH_PLATFORM
+#if defined _EG_LINUX_PLATFORM || defined _EG_APPLE_PLATFORM || defined _EG_ANDROID_PLATFORM || defined _EG_SONY_PLATFORM || defined _EG_EMSCRIPTEN_PLATFORM || defined _EG_SWITCH_PLATFORM
 #	define _EG_UNIX_PLATFORM true
 #endif
 
@@ -67,12 +61,11 @@
 #	endif
 #endif
 
- // Marmalade really even defines _MSC_VER, when using another compiler, so we have to additionally check, that no other compiler (of the used by Marmalade ones) is running
-#if defined _EG_MICROSOFT_PLATFORM || (defined _EG_MARMALADE_PLATFORM && defined _MSC_VER && !defined __clang__ && !defined __gcc__ && defined I3D_ARCH_X86) || defined _EG_SWITCH_WINDOWS_PLATFORM
+#if defined _EG_MICROSOFT_PLATFORM || defined _EG_SWITCH_WINDOWS_PLATFORM
 #	define _EG_MS_COMPILER true
 #endif
 
-#if defined _EG_PS3_PLATFORM
+#if 0
 #	define _EG_BIGENDIAN_PLATFORM true
 #else
 #	define _EG_LITTLEENDIAN_PLATFORM true
@@ -87,11 +80,11 @@
 #	define EG_LOGGING true
 #endif
 
-#if !defined _EG_MARMALADE_PLATFORM && !defined EG_NO_CPP11
+#if !defined EG_NO_CPP11
 #	define EG_PLATFORM_SUPPORTS_CPP11 true
 #endif
 
-#if defined EG_PLATFORM_SUPPORTS_CPP11 && !defined _EG_LINUX_PLATFORM && !defined _EG_PSVITA_PLATFORM
+#if defined EG_PLATFORM_SUPPORTS_CPP11 && !defined _EG_LINUX_PLATFORM
 #	define EG_PLATFORM_SUPPORTS_MOVE_SEMANTICS true
 #endif
 
@@ -120,13 +113,6 @@
 #		import <CoreFoundation/CFString.h>
 #		import <CoreFoundation/CoreFoundation.h>
 #		include <sys/time.h>
-#	elif defined _EG_BLACKBERRY_PLATFORM
-#		include <sys/time.h>
-#		include <iconv.h>
-#		include <limits.h>
-#		include <string.h>
-#	elif defined _EG_MARMALADE_PLATFORM
-#		include <limits.h>
 #	elif defined _EG_ANDROID_PLATFORM
 #		include <sys/time.h>
 #		include <sys/limits.h>
@@ -136,8 +122,6 @@
 #		include <iconv.h>
 #		include <limits.h>
 #		include <string.h>
-#	elif defined _EG_PS3_PLATFORM
-#		include <limits.h>
 #	elif defined _EG_EMSCRIPTEN_PLATFORM
 #		include <iconv.h>
 #	endif
@@ -146,11 +130,7 @@
 #include "AoTTG/Common-cpp/inc/Helpers/debug_assert.h"
 
 // Definitions for memory management //////////////////////////////////////
-#if !defined _EG_PS3_PLATFORM && !defined _EG_PSVITA_PLATFORM
-#	include <memory.h>
-#else
-#	include <string.h>
-#endif
+#include <memory.h>
 #define MEMCPY(dst, src, size) memcpy(dst, src, size)
 #define MEMSET(dst, c, size)   memset(dst, c, size)
 #define ZEROAT(ptr)            (void)MEMSET(ptr, 0, sizeof(*ptr))
@@ -185,11 +165,30 @@ typedef wchar_t EG_CHAR;
 
 #if defined _EG_MICROSOFT_PLATFORM
 #	define SNWPRINTF                        _snwprintf
-#elif defined _EG_MARMALADE_PLATFORM && (!defined I3D_ARCH_X86 || !(defined _EG_MS_COMPILER || defined __clang__)) && !defined I3D_ARCH_64_BIT && !defined S3E_IPHONE_STATIC_LINK || defined _EG_ANDROID_PLATFORM || defined _EG_EMSCRIPTEN_PLATFORM
+#elif defined _EG_ANDROID_PLATFORM || defined _EG_EMSCRIPTEN_PLATFORM
 #	define SNWPRINTF                        EG_swprintf // very expensive, use with care!
 #else
 #	define SNWPRINTF                        swprintf
 #endif
+
+// format specifiers:
+#define EG_FRMT_SPCFR_STRTOSTR_A "s"
+#define EG_FRMT_SPCFR_WSTRTOSTR_A "ls" // "S" would also work
+#ifdef _EG_SWITCH_NX_PLATFORM
+#	define EG_FRMT_SPCFR_STRTOWSTR_A "s"
+#else
+#	define EG_FRMT_SPCFR_STRTOWSTR_A "hs" // "s" would also work with other compilers, except with MSVC, for which it would have to be "S"
+#endif
+#define EG_FRMT_SPCFR_WSTRTOWSTR_A "ls"
+
+#define EG_FRMT_SPCFR_STRTOSTR_W L"s"
+#define EG_FRMT_SPCFR_WSTRTOSTR_W L"ls" // "S" would also work
+#ifdef _EG_SWITCH_NX_PLATFORM
+#	define EG_FRMT_SPCFR_STRTOWSTR_W L"s"
+#else
+#	define EG_FRMT_SPCFR_STRTOWSTR_W L"hs" // "s" would also work with other compilers, except with MSVC, for which it would have to be "S"
+#endif
+#define EG_FRMT_SPCFR_WSTRTOWSTR_W L"ls"
 
 // Time access and control functions //////////////////////////////////////
 
@@ -224,7 +223,7 @@ typedef wchar_t EG_CHAR;
 #include <stdio.h>
 
 // Debug output functions ////////////////////////////////////////////////
-#if defined _EG_BLACKBERRY_PLATFORM || defined _EG_LINUX_PLATFORM || defined _EG_EMSCRIPTEN_PLATFORM || defined _EG_SWITCH_PLATFORM
+#if defined _EG_LINUX_PLATFORM || defined _EG_EMSCRIPTEN_PLATFORM || defined _EG_SWITCH_PLATFORM
 	#include <stdarg.h>
 #endif
 #if defined DBGPRINTF_LEVEL || defined DBGPRINTF_MEMORY_ACTIVE || defined DBGPRINTF_PERFORMANCE_ACTIVE

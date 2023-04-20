@@ -1,5 +1,5 @@
 /* Exit Games Common - C++ Client Lib
- * Copyright (C) 2004-2022 Exit Games GmbH. All rights reserved.
+ * Copyright (C) 2004-2023 Exit Games GmbH. All rights reserved.
  * http://www.photonengine.com
  * mailto:developer@photonengine.com
  */
@@ -11,9 +11,7 @@
 #include "AoTTG/Common-cpp/inc/MemoryManagement/AllocatorInterface.h"
 #include "AoTTG/Common-cpp/inc/MemoryManagement/Internal/MemoryPool.h"
 
-#if defined _EG_MARMALADE_PLATFORM && (defined EG_DEBUGGER || !defined _EG_MS_COMPILER) && defined I3D_ARCH_X86
-#	define EG_DEACTIVATE_MEMORY_MANAGER
-#endif
+//#define EG_DEACTIVATE_MEMORY_MANAGER
 
 namespace ExitGames
 {

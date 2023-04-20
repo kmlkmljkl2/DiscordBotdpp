@@ -1,12 +1,12 @@
 /* Exit Games Common - C++ Client Lib
- * Copyright (C) 2004-2022 Exit Games GmbH. All rights reserved.
+ * Copyright (C) 2004-2023 Exit Games GmbH. All rights reserved.
  * http://www.photonengine.com
  * mailto:developer@photonengine.com
  */
 
 #pragma once
 
-#include "AoTTG/Common-cpp/inc/Base.h"
+#include "AoTTG/Common-cpp/inc/defines.h"
 
 #ifdef EG_PLATFORM_SUPPORTS_MOVE_SEMANTICS
 
@@ -25,8 +25,8 @@ namespace ExitGames
 				Data(Data&& rhs);
 				Data& operator=(Data&& rhs);
 
-				int getSize() const;
-				nByte* getBuffer() const;
+				int getSize(void) const;
+				nByte* getBuffer(void) const;
 			private:
 				Data(const Data& rhs);
 				Data& operator=(const Data& rhs);

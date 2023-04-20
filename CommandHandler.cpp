@@ -208,6 +208,9 @@ void CommandHandler::Test(const dpp::message_create_t& event, std::string args)
 	MusicPlayers[event.msg.guild_id]->PlaybackDelay = std::stod(args);
 
 	return;
+
+	
+
 	std::vector<std::string> TestPages;
 	TestPages.push_back("Page 1");
 	TestPages.push_back("Page 2");
