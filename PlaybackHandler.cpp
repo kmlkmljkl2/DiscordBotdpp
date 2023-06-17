@@ -255,7 +255,7 @@ void PlaybackHandler::Remove(int index)
 void PlaybackHandler::Remove(int startIndex, int end)
 {
 	startIndex = startIndex - 1;
-	end = end - 1;
+	end = end;
 	if (startIndex < 0 || end < 0)
 		return;
 
@@ -280,6 +280,10 @@ void PlaybackHandler::TryPlay()
 		Playing = false;
 		return;
 	}
+	while (!v->is_ready())
+	{
+		std::this_thread::sleep_for(std::chrono::duration<double>(0.5));
+	}
 	v->voiceclient->set_send_audio_type(v->voiceclient->satype_live_audio);
 
 	//const int target_rate = 1536;  //target rate in KB/s
@@ -294,7 +298,7 @@ void PlaybackHandler::TryPlay()
 
 	while (Queue.size() > 0)
 	{
-		std::string ar = "cmd.exe /c  yt-dlp.exe -f bestaudio " + std::string(Debugging ? "" : "-q") + std::string(" --ignore-errors -o - \"");
+		std::string ar = "cmd.exe /c yt-dlp.exe -f bestaudio " + std::string(Debugging ? "" : "-q") + std::string(" --ignore-errors -o - \"");
 		ar = ar + Queue[0].Url; //-err_detect ignore_err
 		//ar = ar + "\" | ffmpeg -i pipe:0 -ac 2 -f s16le -ar 48000 pipe:1 -loglevel panic -sample_fmt s16"; //-qscale:a 3 -f ogv output.ogv
 		ar = ar + "\" | ffmpeg -re -i pipe:0 -ac 2 -f s16le -ar 48000 pipe:1 " + std::string(Debugging ? "-loglevel panic" : "-loglevel quiet"); //-loglevel panic  //-qscale:a 3 -f ogv output.ogv
@@ -311,8 +315,8 @@ void PlaybackHandler::TryPlay()
 		StartTime = std::chrono::high_resolution_clock::now();
 
 		byte test[11520];
-		std::cout << "Sizeof unit16_t " << sizeof(uint16_t) << " and sizeof the array " << sizeof(test) << std::endl;
-		std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(2000));
+		//std::cout << "Sizeof unit16_t " << sizeof(uint16_t) << " and sizeof the array " << sizeof(test) << std::endl;
+		//std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(2000));
 		while ((bytes_read = fread(test, 1, 11520, pipe)) > 0)
 		{
 			if (Stopping)
@@ -562,16 +566,15 @@ void PlaybackHandler::Skip()
 
 void PlaybackHandler::Shuffle()
 {
-	std::random_device rd;  // seed for the random number engine
-	std::mt19937 gen(rd());  // Mersenne Twister 19937 generator
-	std::shuffle(Queue.begin() + 1, Queue.end(), gen);
+	auto rng = std::default_random_engine{};
+	std::shuffle(Queue.begin() + 1, Queue.end(), rng);
 }
 
 std::string PlaybackHandler::QueueString()
 {
 	try
 	{
-		std::string Endresult = "```\n";
+		std::string Endresult = u8"```\n";
 		auto stop = std::chrono::high_resolution_clock::now();
 		auto elapsedSeconds = std::chrono::duration_cast<std::chrono::seconds>(stop - StartTime).count();
 		int hours = elapsedSeconds / 3600;

@@ -13,6 +13,7 @@
 #include "DiscordBotStuff.h"
 #include "Logger.h"
 #include <map>
+#include <regex>
 #define _CRT_SECURE_NO_WARNINGS
 
 std::map<std::string, Command> CommandList;
@@ -37,7 +38,9 @@ void onMessage_Event(const dpp::message_create_t& event)
 				//Having both byte 3 and byte 5 set makes MC auto-ban you
 				data.put<byte, char[5]>(3, "Chat"); // RPC Name
 
-				auto msg = ExitGames::Common::JString(event.msg.content.c_str());
+
+
+				auto msg = ExitGames::Common::JString(std::regex_replace(event.msg.content.c_str(), std::regex(std::string(R"(<|\d+>)")), "").c_str());
 				auto name = ExitGames::Common::JString(event.msg.author.username.c_str());
 
 				Common::Object t[2];
@@ -159,8 +162,11 @@ void InitCommands()
 	CommandList["join"] = Command(CommandHandler::Join, "Joins a Room -join [Name]", "j");
 	CommandList["list"] = Command(CommandHandler::List, "Gives you the Room list", "l");
 	CommandList["disconnect"] = Command(CommandHandler::Disconnect, "Disconnects the bot", "dc");
+	CommandList["dcall"] = Command(CommandHandler::DcAll, "Disconnects all bots", "");
+
 	CommandList["ahegao"] = Command(CommandHandler::Ahegao, "best kind of gao");
 	CommandList["meow"] = Command(CommandHandler::Meow, "Meow", "miau");
+	CommandList["quack"] = Command(CommandHandler::Quack, "Quack");
 	CommandList["ud"] = Command(CommandHandler::UrbanDictionary, "Gets the Definition for the given term");
 	CommandList["next"] = Command(CommandHandler::Next, "Gives you the next definition given by -ud");
 	CommandList["back"] = Command(CommandHandler::Back, "Gives you the previous definition given by -ud");
@@ -203,16 +209,12 @@ int main()
 	//return 0;
 	DiscordBotStuff::Init();
 	InitCommands();
-	
-	//InitTestCommands();
-
-	//Logger::LogDebug("Starting");
-
+	InitTestCommands();
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 
 	while (DiscordBotStuff::DiscordBot->token == "")
 	{
-		SLEEP(1000);
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 	DiscordBotStuff::DiscordBot->on_voice_state_update(onVoiceStateUpdate);
 	DiscordBotStuff::DiscordBot->on_button_click(onButtonClick);
@@ -226,6 +228,10 @@ int main()
 
 	DiscordBotStuff::DiscordBot->start(false);
 }
+
+
+
+
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 //Debug program: F5 or Debug > Start Debugging menu

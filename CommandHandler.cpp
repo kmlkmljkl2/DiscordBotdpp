@@ -75,7 +75,7 @@ void CommandHandler::RemoveBot(NotPhotonListener* OldBot)
 	{
 		if (StoreVector[i] == OldBot)
 		{
-			StoreVector[i] = NULL;
+			//StoreVector[i] = NULL;
 			StoreVector.erase(StoreVector.begin() + i);
 		}
 	}
@@ -126,7 +126,7 @@ bool CommandHandler::SameVoiceChat(const dpp::message_create_t& event)
 
 void CommandHandler::Init()
 {
-	std::thread(HandleChat).detach();
+	//std::thread(HandleChat).detach();
 }
 
 void CommandHandler::UrbanDictionary(const dpp::message_create_t& event, std::string args)
@@ -175,6 +175,24 @@ void CommandHandler::Meow(const dpp::message_create_t& event, std::string args)
 	result = j["results"][0]["media"][0]["gif"]["url"];
 	event.send(result);
 }
+void CommandHandler::Quack(const dpp::message_create_t& event, std::string args)
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> dis(1, 100);
+	int random = dis(gen);
+
+	std::cout << random << std::endl;
+
+	std::string Url = "https://g.tenor.com/v1/search?q=quack&media_filter=minimal&key=1D4ZQ37D7W46&limit=1&pos=" + std::to_string(random);
+
+	std::string response_string = GetResponse(Url);
+	json j = json::parse(response_string);
+
+	std::string result;
+	result = j["results"][0]["media"][0]["gif"]["url"];
+	event.send(result);
+}
 
 void CommandHandler::CreateRoom(const dpp::message_create_t& event, std::string args)
 {
@@ -203,9 +221,105 @@ void CommandHandler::CreateRoom(const dpp::message_create_t& event, std::string 
 
 void CommandHandler::Test(const dpp::message_create_t& event, std::string args)
 {
-	if (!SameVoiceChat(event)) return;
-	if (MusicPlayers.count(event.msg.guild_id) == 0) return;
-	MusicPlayers[event.msg.guild_id]->PlaybackDelay = std::stod(args);
+
+
+
+	return;
+	std::string InGameName = "NoodleDoodleTesting" + std::to_string(1 + (rand() % 1000));
+	Common::JString Ip = "";
+	Ip = "135.125.239.180";
+	std::string name = std::string("notsocrusty") + std::to_string(1 + (rand() % 1000));
+	LoadBalancing::ClientConstructOptions opt = Photon::ConnectionProtocol::UDP;
+	for (int o = 0; 1000 > o; o++)
+	{
+		/*if (o == 150)
+			opt = Photon::ConnectionProtocol::TCP;*/
+
+		
+		NotPhotonListener* Bot = new NotPhotonListener("", opt);
+		Bot->CreatorId = event.msg.author.id;
+		Bot->GuildId = event.msg.guild_id;
+		Bot->ChannelId = event.msg.channel_id;
+
+		/*ExitGames::LoadBalancing::ConnectOptions options2(ExitGames::LoadBalancing::AuthenticationValues().setUserID("notsocrusty"), "crustycunt");
+
+		Bot->Client.connect(options2);*/
+
+		ExitGames::LoadBalancing::ConnectOptions options(ExitGames::LoadBalancing::AuthenticationValues().setUserID(name.c_str()), "crustycunty", Ip, ExitGames::LoadBalancing::ServerType::MASTER_SERVER);
+		Bot->Client.connect(options);
+
+		Bot->Client.getLocalPlayer().addCustomProperty("name", InGameName.c_str());
+		Bot->Client.getLocalPlayer().addCustomProperty("dead", true);
+		Bot->Client.getLocalPlayer().addCustomProperty("kills", 0);
+		Bot->Client.getLocalPlayer().addCustomProperty("deaths", -1);
+		Bot->Client.getLocalPlayer().addCustomProperty("max_dmg", 0);
+		Bot->Client.getLocalPlayer().addCustomProperty("total_dmg", 0);
+		Bot->Client.getLocalPlayer().addCustomProperty("RCteam", 1);
+		Bot->Client.getLocalPlayer().addCustomProperty("NoodleDoodle", "I'm a Discord Bot");
+
+		StoreVector.push_back(Bot);
+		
+	}
+	std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+
+	for (auto& Bot : StoreVector)
+	{
+		args = "blood";
+		if (Bot->Client.getState() != LoadBalancing::PeerStates::JoinedLobby)
+		{
+			Logger::LogDebug("Failed to join Server, try again");
+			//Debug(event);
+			Bot->Client.disconnect();
+			RemoveBot(Bot);
+			Bot->KeepRunning = false;
+			return;
+		}
+		LoadBalancing::Room* Target = NULL;
+		for (int i = 0; Bot->Client.getRoomList().getSize() > i; i++)
+		{
+			LoadBalancing::Room* room = Bot->Client.getRoomList()[i];
+			std::string Name = Helpers::ToLower(std::regex_replace(room->getName().UTF8Representation().cstr(), std::regex("\\[[a-zA-Z0-9\]{6}\\]"), ""));
+
+			if (Name.find(args) != std::string::npos)
+			{
+				//Logger::LogDebug("Join Found a room");
+				Target = room;
+				break;
+			}
+		}
+
+		if (Target != NULL)
+		{
+			if (Target->getMaxPlayers() != 0 && Target->getMaxPlayers() == Target->getPlayerCount())
+			{
+				event.reply("Room is full");
+				return;
+			}
+			for (int i = 0; Target->getCustomProperties().getSize() > i; i++)
+			{
+				auto& prop = Target->getCustomProperties().getKeys()[i];
+				if (std::string(prop.toString().UTF8Representation().cstr()) == "\"Private\"")
+				{
+					event.reply("Use the nonexistent join method to join AoTTG2 passworded rooms");
+					return;
+				}
+			}
+			Bot->Client.opJoinRoom(Target->getName(), false, 0, Common::JVector<Common::JString>());
+			bool createChannel = false;
+			continue;
+		}
+		Logger::LogDebug("nothing found");
+	}
+	return;
+	dpp::embed embed = dpp::embed().
+		set_color(dpp::colors::sti_blue).
+		set_title("Confession").
+		set_description(event.msg.content).
+		set_timestamp(time(nullptr));
+
+	DiscordBotStuff::DiscordBot->message_delete(event.msg.id, event.msg.channel_id);
+	DiscordBotStuff::DiscordBot->message_create(dpp::message(event.msg.channel_id, embed));
+
 
 	return;
 
@@ -480,23 +594,51 @@ void CommandHandler::Disconnect(const dpp::message_create_t& event, std::string 
 	if (Bot == nullptr) return;
 
 	Bot->Client.disconnect();
-	Bot->KeepRunning = false;
-	//Bot->~NotPhotonListener();
 	RemoveBot(Bot);
-	//delete Bot;
 
-	event.send(Bot->CreatedChannel ? "Channel will get deleted in 5 seconds" : "Disconnected");
-	if (!Bot->CreatedChannel)		return;
 
-	std::this_thread::sleep_for(std::chrono::seconds(5));
+	if (Bot->CreatedChannel)
+	{
+		event.send(Bot->CreatedChannel ? "Channel will get deleted in 5 seconds" : "Disconnected");
 
-	DiscordBotStuff().DiscordBot->channel_delete(event.msg.channel_id, [](const dpp::confirmation_callback_t& event)
-		{
-			if (event.is_error())
+		std::this_thread::sleep_for(std::chrono::seconds(5));
+
+		DiscordBotStuff().DiscordBot->channel_delete(event.msg.channel_id, [](const dpp::confirmation_callback_t& event)
 			{
-				Logger::LogError(event.get_error().message);
-			}
-		});
+				if (event.is_error())
+				{
+					Logger::LogError(event.get_error().message);
+				}
+			});
+	}
+	Bot->KeepRunning = false;
+
+}
+void CommandHandler::DcAll(const dpp::message_create_t& event, std::string args)
+{
+
+	for (auto& Bot : StoreVector)
+	{
+		Bot->Client.disconnect();
+		RemoveBot(Bot);
+
+		if (Bot->CreatedChannel)
+		{
+			event.send("Channel will get deleted in 5 seconds");
+			std::this_thread::sleep_for(std::chrono::seconds(5));
+
+			DiscordBotStuff().DiscordBot->channel_delete(event.msg.channel_id, [](const dpp::confirmation_callback_t& event)
+				{
+					if (event.is_error())
+					{
+						Logger::LogError(event.get_error().message);
+					}
+				});
+		}
+		Bot->KeepRunning = false;
+
+
+	}
 }
 
 void CommandHandler::Start(const dpp::message_create_t& event, std::string args)
@@ -535,7 +677,7 @@ Continue:
 		return;
 	}
 
-	NotPhotonListener* Bot = new NotPhotonListener("");
+	NotPhotonListener* Bot = new NotPhotonListener("", Photon::ConnectionProtocol::UDP);
 	Bot->CreatorId = event.msg.author.id;
 	Bot->GuildId = event.msg.guild_id;
 	Bot->ChannelId = event.msg.channel_id;
@@ -567,6 +709,7 @@ Continue:
 		Disconnect(event);
 		return;
 	}
+	///Gets only value
 	/*for (int i = 0; Bot->Client.getRoomList().getSize() > i; i++)
 	{
 		auto room = Bot->Client.getRoomList()[i];
@@ -577,6 +720,30 @@ Continue:
 	}*/
 
 	List(event);
+	///Gets value and Key
+	/*for (int i = 0; Bot->Client.getRoomList().getSize() > i; i++)
+	{
+		LoadBalancing::Room* room = Bot->Client.getRoomList()[i];
+		auto cleanname = std::regex_replace(room->getName().ANSIRepresentation().cstr(), std::regex("\\[[a-zA-Z0-9\]{6}\\]"), "");
+		auto splitted = Helpers::Split(cleanname, '`');
+		if (room->getCustomProperties().getSize() > 0)
+		{
+			std::string roomProps = splitted[0] + "\n";
+			for (int o = 0; room->getCustomProperties().getSize() > o; o++)
+			{
+				auto& key = room->getCustomProperties().getKeys()[o];
+				std::cout << key.toString(true).UTF8Representation().cstr() << std::endl;
+
+				auto value = room->getCustomProperties().getValue(key);
+				std::cout << value->toString(true).UTF8Representation().cstr() << std::endl;
+
+				std::string a = key.toString(true).UTF8Representation().cstr();
+				roomProps += a + ":" + "\t" + value->toString(true).UTF8Representation().cstr();
+			}
+			event.reply(roomProps);
+		}
+
+	}*/
 }
 
 void CommandHandler::Next(const dpp::message_create_t& event, std::string args)
@@ -634,7 +801,8 @@ void CommandHandler::JoinVC(const dpp::message_create_t& event, std::string args
 	/* If we need to join a vc at all, join it here if join_vc == true */
 	if (join_vc)
 	{
-		if (!g->connect_member_voice(event.msg.author.id))
+		auto connect = g->connect_member_voice(event.msg.author.id);
+		if (!connect)
 		{
 			/* The user issuing the command is not on any voice channel, we can't do anything */
 			DiscordBotStuff::DiscordBot->message_create(dpp::message(event.msg.channel_id, "You don't seem to be on a voice channel! :("));
@@ -691,6 +859,7 @@ void CommandHandler::Play(const dpp::message_create_t& event, std::string args)
 	}
 
 	MusicPlayers[event.msg.guild_id]->Add(args);
+	event.reply("Song added");
 }
 
 void CommandHandler::Skip(const dpp::message_create_t& event, std::string args)

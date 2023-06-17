@@ -4,13 +4,14 @@
 #include <OperationResponse.h>
 #include <iostream>
 #include <Listener.h>
+#include <ClientConstructOptions.h>
 
 using namespace ExitGames;
 class NotPhotonListener : private ExitGames::LoadBalancing::Listener
 {
 public:
-	NotPhotonListener(std::string str);
-	NotPhotonListener(const NotPhotonListener& old);
+	NotPhotonListener(std::string str, const LoadBalancing::ClientConstructOptions& op);
+	NotPhotonListener(const NotPhotonListener& old, const LoadBalancing::ClientConstructOptions& op);
 	~NotPhotonListener();
 	LoadBalancing::Client Client;
 	bool KeepRunning = true;

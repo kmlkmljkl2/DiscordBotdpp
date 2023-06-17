@@ -23,12 +23,12 @@ void NotPhotonListener::Run()
 	delete this;
 }
 
-NotPhotonListener::NotPhotonListener(std::string str) : Client(*this, "", "01042015_1.28", Photon::ConnectionProtocol::UDP)
+NotPhotonListener::NotPhotonListener(std::string str, const LoadBalancing::ClientConstructOptions& op) : Client(*this, "", "01042015_1.28", op)
 {
 	std::thread(&NotPhotonListener::Run, this).detach();
 }
 
-NotPhotonListener::NotPhotonListener(const NotPhotonListener& old) : Client(*this, "", "01042015_1.28", Photon::ConnectionProtocol::UDP)
+NotPhotonListener::NotPhotonListener(const NotPhotonListener& old, const LoadBalancing::ClientConstructOptions& op) : Client(*this, "", "01042015_1.28", op)
 {
 	std::thread(&NotPhotonListener::Run, this).detach();
 }
@@ -100,7 +100,7 @@ void NotPhotonListener::leaveRoomEventAction(int playerNr, bool isInactive)
 		}
 	}*/
 	//std::cout << "Player " << playerNr << " left" << std::endl;
-	Chat += "[" + std::to_string(playerNr) + "]	left the Room";
+	Chat += "[" + std::to_string(playerNr) + "]	left the Room\n";
 }
 
 //InRoom Events
@@ -191,5 +191,5 @@ void NotPhotonListener::onMasterClientChanged(int id, int oldID)
 
 void NotPhotonListener::onStatusChanged(int statusCode)
 {
-	std::cout << "called" << std::endl;
+	std::cout << "onStatusChanged called (" << statusCode << ")" << std::endl;
 }
